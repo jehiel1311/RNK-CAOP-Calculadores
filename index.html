@@ -1,0 +1,761 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Ranking CAOP (Abril-Mayo-Junio)</title>
+
+  <style>
+    :root{
+      color-scheme: dark;
+
+      /* Estética CAP (oscuro + dorado) */
+      --bg0:#05060b;
+      --bg1:#070a12;
+      --bg2:#0b1020;
+
+      --card: rgba(255,255,255,0.05);
+      --card2: rgba(255,255,255,0.07);
+      --border: rgba(255,255,255,0.10);
+
+      --text: rgba(255,255,255,0.92);
+      --muted: rgba(255,255,255,0.66);
+
+      --gold1:#fff3c2;
+      --gold2:#f3d38a;
+      --gold3:#d7b56d;
+      --gold4:#9b6b22;
+
+      --shadow: 0 26px 80px rgba(0,0,0,0.60);
+
+      --r1: 22px;
+      --r2: 14px;
+
+      --focus: rgba(215,181,109,0.55);
+      --focusRing: rgba(215,181,109,0.14);
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(1000px 700px at 15% 10%, rgba(215,181,109,0.14), transparent 58%),
+        radial-gradient(900px 650px at 85% 15%, rgba(215,181,109,0.10), transparent 62%),
+        radial-gradient(800px 600px at 50% 110%, rgba(255,243,194,0.06), transparent 60%),
+        linear-gradient(180deg, var(--bg0), var(--bg2) 55%, var(--bg0));
+      overflow-x:hidden;
+    }
+
+    /* grano / partículas sutiles */
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      opacity:0.45;
+      background-image:
+        radial-gradient(1.6px 1.6px at 20% 18%, rgba(255,255,255,0.45), transparent 60%),
+        radial-gradient(1.2px 1.2px at 70% 22%, rgba(255,255,255,0.35), transparent 60%),
+        radial-gradient(1.3px 1.3px at 80% 62%, rgba(255,255,255,0.30), transparent 60%),
+        radial-gradient(1.1px 1.1px at 36% 70%, rgba(255,255,255,0.28), transparent 60%),
+        radial-gradient(1px 1px at 55% 86%, rgba(255,255,255,0.24), transparent 60%),
+        radial-gradient(1.1px 1.1px at 10% 78%, rgba(255,255,255,0.22), transparent 60%),
+        radial-gradient(1.3px 1.3px at 92% 14%, rgba(255,255,255,0.20), transparent 60%);
+      filter: blur(0.2px);
+    }
+
+    .wrap{
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: clamp(16px, 3vw, 28px);
+      min-height: 100%;
+      display:flex;
+      flex-direction:column;
+      gap: 14px;
+    }
+
+    /* Top bar tipo “CAP web” */
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 16px;
+      padding: 10px 6px;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap: 12px;
+      min-width: 220px;
+    }
+    .brand img{
+      height: 34px;
+      width: auto;
+      display:block;
+      filter: drop-shadow(0 10px 24px rgba(215,181,109,0.16));
+    }
+    .brandText{
+      display:flex;
+      flex-direction:column;
+      line-height:1.1;
+    }
+    .brandText b{
+      font-size: 13px;
+      letter-spacing: 0.3px;
+      color: rgba(255,255,255,0.88);
+    }
+    .brandText span{
+      font-size: 12px;
+      color: rgba(255,255,255,0.55);
+    }
+
+    .navPills{
+      display:flex;
+      align-items:center;
+      gap: 10px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+    .pillLink{
+      text-decoration:none;
+      font-size: 12px;
+      color: rgba(255,255,255,0.78);
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.04);
+      padding: 8px 10px;
+      border-radius: 999px;
+      transition: background .18s ease, border-color .18s ease, transform .06s ease;
+      user-select:none;
+      white-space:nowrap;
+    }
+    .pillLink:hover{
+      background: rgba(255,255,255,0.07);
+      border-color: rgba(215,181,109,0.28);
+    }
+    .pillLink:active{ transform: translateY(1px); }
+    .pillLink.active{
+      border-color: rgba(215,181,109,0.40);
+      background: rgba(215,181,109,0.10);
+      color: rgba(255,255,255,0.90);
+    }
+
+    .shell{
+      width:100%;
+      display:grid;
+      grid-template-columns: 1.10fr 0.90fr;
+      gap: clamp(14px, 2.5vw, 22px);
+      align-items:start;
+    }
+    @media (max-width: 900px){
+      .shell{ grid-template-columns: 1fr; }
+      .brand{ min-width: unset; }
+    }
+
+    .header{
+      grid-column: 1 / -1;
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-end;
+      gap: 16px;
+      padding: 4px 4px 6px;
+    }
+
+    .title{
+      margin:0;
+      font-size: clamp(22px, 2.8vw, 32px);
+      letter-spacing: 0.2px;
+      line-height: 1.15;
+      background: linear-gradient(180deg, var(--gold1), var(--gold3) 55%, var(--gold4));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: 0 0 26px rgba(215,181,109,0.18);
+    }
+
+    .subtitle{
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .card{
+      border-radius: var(--r1);
+      background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.035));
+      border: 1px solid rgba(255,255,255,0.10);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      position:relative;
+    }
+
+    .card::before{
+      content:"";
+      position:absolute;
+      left:-20%;
+      top:-30%;
+      width: 140%;
+      height: 70%;
+      background: radial-gradient(closest-side, rgba(215,181,109,0.16), transparent 60%);
+      pointer-events:none;
+    }
+
+    .inner{ padding: clamp(16px, 2.5vw, 22px); position:relative; }
+
+    .grid{ display:grid; gap: 14px; }
+
+    .field{ display:grid; gap: 8px; }
+    .labelRow{
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+    }
+
+    label{ font-size: 13px; color: rgba(255,255,255,0.74); }
+
+    .hint{
+      font-size: 12px;
+      color: rgba(255,255,255,0.56);
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(0,0,0,0.18);
+      padding: 4px 8px;
+      border-radius: 999px;
+    }
+
+    .control{
+      display:flex; align-items:center; gap: 10px;
+      border-radius: var(--r2);
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.04);
+      padding: 10px 12px;
+      transition: border-color .18s ease, background .18s ease, box-shadow .18s ease;
+    }
+    .control:focus-within{
+      border-color: var(--focus);
+      background: rgba(255,255,255,0.06);
+      box-shadow: 0 0 0 4px var(--focusRing);
+    }
+
+    input, select{
+      width:100%;
+      border:0;
+      outline:0;
+      background: transparent;
+      color: var(--text);
+      font-size: 15px;
+      min-height: 24px;
+    }
+    input::placeholder{ color: rgba(255,255,255,0.42); }
+
+    select{
+      appearance:none;
+      -webkit-appearance:none;
+      -moz-appearance:none;
+      cursor:pointer;
+      color-scheme: dark;
+    }
+    select option{
+      background: #0b1020;
+      color: rgba(255,255,255,0.92);
+    }
+
+    .chev{
+      width:10px; height:10px;
+      border-right:2px solid rgba(255,255,255,0.62);
+      border-bottom:2px solid rgba(255,255,255,0.62);
+      transform: rotate(45deg);
+      flex: 0 0 auto;
+      opacity:0.9;
+    }
+
+    .actions{
+      display:flex;
+      gap: 10px;
+      flex-wrap:wrap;
+      margin-top: 4px;
+    }
+
+    .btn{
+      appearance:none;
+      border:0;
+      cursor:pointer;
+      border-radius: 14px;
+      padding: 12px 14px;
+      font-weight: 900;
+      font-size: 14px;
+      letter-spacing: 0.15px;
+      transition: transform .06s ease, filter .18s ease, background .18s ease, border-color .18s ease;
+      user-select:none;
+    }
+    .btn:active{ transform: translateY(1px); }
+
+    .btnPrimary{
+      color: #0b0f19;
+      background: linear-gradient(180deg, var(--gold1), var(--gold3));
+      box-shadow: 0 16px 40px rgba(215,181,109,0.20);
+    }
+    .btnPrimary:hover{ filter: brightness(1.04); }
+
+    .btnGhost{
+      color: var(--text);
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+    .btnGhost:hover{ background: rgba(255,255,255,0.07); }
+
+    .msg{
+      display:none;
+      border-radius: 16px;
+      padding: 12px 14px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.06);
+      color: var(--text);
+    }
+    .msg.error{
+      border-color: rgba(255,77,166,0.45);
+      background: rgba(255,77,166,0.10);
+    }
+
+    .result{
+      display:none;
+      border-radius: 18px;
+      padding: 16px;
+      border: 1px solid rgba(215,181,109,0.30);
+      background: linear-gradient(180deg, rgba(215,181,109,0.10), rgba(255,255,255,0.035));
+    }
+
+    .resultTitle{
+      font-weight: 900;
+      font-size: 12.5px;
+      color: rgba(255,255,255,0.78);
+      letter-spacing: 0.25px;
+      text-transform: uppercase;
+    }
+
+    .points{
+      margin-top: 8px;
+      font-size: clamp(30px, 4.4vw, 44px);
+      font-weight: 950;
+      letter-spacing: -0.6px;
+      line-height: 1.05;
+      background: linear-gradient(180deg, var(--gold1), var(--gold3) 55%, var(--gold4));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: 0 0 26px rgba(215,181,109,0.18);
+    }
+
+    .meta{
+      margin-top: 10px;
+      font-size: 13px;
+      color: rgba(255,255,255,0.74);
+      line-height: 1.35;
+    }
+
+    .pillRow{
+      display:flex;
+      flex-wrap:wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .pill{
+      font-size: 12px;
+      color: rgba(255,255,255,0.80);
+      border: 1px solid rgba(215,181,109,0.26);
+      background: rgba(215,181,109,0.08);
+      padding: 7px 10px;
+      border-radius: 999px;
+    }
+
+    .side{
+      border-radius: var(--r1);
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.045);
+      box-shadow: 0 18px 50px rgba(0,0,0,0.40);
+      overflow:hidden;
+      position:relative;
+    }
+    .side::before{
+      content:"";
+      position:absolute;
+      inset:-40px -60px auto -60px;
+      height: 180px;
+      background: radial-gradient(closest-side, rgba(215,181,109,0.14), transparent 65%);
+      pointer-events:none;
+    }
+
+    .side .inner{ padding: 18px; position:relative; }
+
+    .sideTitle{
+      margin:0 0 10px;
+      font-size: 14px;
+      letter-spacing: 0.2px;
+      color: rgba(255,255,255,0.86);
+    }
+
+    .code{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 12.5px;
+      color: rgba(255,255,255,0.86);
+      background: rgba(0,0,0,0.22);
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 14px;
+      padding: 12px;
+      white-space: pre-wrap;
+      line-height: 1.35;
+    }
+
+    .list{
+      margin-top: 12px;
+      color: rgba(255,255,255,0.74);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .note{
+      margin-top: 14px;
+      font-size: 12px;
+      color: rgba(255,255,255,0.54);
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding-top: 12px;
+    }
+
+    /* Footer estilo CAP */
+    .footer{
+      margin-top:auto;
+      padding: 18px 6px 8px;
+      display:grid;
+      gap: 12px;
+    }
+    .footerCard{
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.04);
+      padding: 14px 14px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 14px;
+      flex-wrap:wrap;
+    }
+    .footerLeft{
+      display:flex;
+      align-items:center;
+      gap: 12px;
+      min-width: 240px;
+    }
+    .footerLeft img{
+      height: 28px;
+      width:auto;
+      opacity:0.95;
+    }
+    .footerText{
+      font-size: 12px;
+      color: rgba(255,255,255,0.62);
+      line-height:1.35;
+    }
+    .footerRight{
+      display:flex;
+      align-items:center;
+      gap: 12px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+    .legalesImg{
+      height: 30px;
+      width:auto;
+      opacity:0.92;
+      filter: drop-shadow(0 10px 20px rgba(0,0,0,0.35));
+    }
+    .smallPrint{
+      font-size: 11px;
+      color: rgba(255,255,255,0.46);
+      line-height:1.35;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+
+    <!-- Barra superior con logo + pills -->
+    <div class="topbar">
+      <div class="brand">
+        <img src="https://v0-puntos-cap-2025.vercel.app/images/cap-logo.png" alt="CAP Logo" />
+        <div class="brandText">
+          <b>CIRCUITO ARGENTINO DE PÓKER</b>
+          <span>Calculadora de puntos</span>
+        </div>
+      </div>
+
+      <div class="navPills">
+        <a class="pillLink" href="#" aria-label="Ranking">Ranking 2026</a>
+        <a class="pillLink active" href="#" aria-current="page">Calculadora de puntos</a>
+      </div>
+    </div>
+
+    <div class="shell">
+      <div class="header">
+        <div>
+          <h1 class="title">Ranking CAOP (Abril-Mayo-Junio)</h1>
+          <div class="subtitle">Calculadora de puntos (TOP 40). Ingresá los datos del torneo.</div>
+        </div>
+      </div>
+
+      <section class="card">
+        <div class="inner">
+          <div class="grid">
+
+            <div class="field">
+              <div class="labelRow">
+                <label for="qEnt">Cantidad de entradas totales</label>
+                <span class="hint">Solo enteros</span>
+              </div>
+              <div class="control">
+                <input id="qEnt" inputmode="numeric" placeholder="Ej: 120" />
+              </div>
+            </div>
+
+            <div class="field">
+              <div class="labelRow">
+                <label for="pos">Posición final</label>
+                <span class="hint">TOP 40</span>
+              </div>
+              <div class="control">
+                <select id="pos"></select>
+                <span class="chev" aria-hidden="true"></span>
+              </div>
+            </div>
+
+            <div class="field">
+              <div class="labelRow">
+                <label for="evento">Tipo de evento</label>
+                <span class="hint">Seleccioná el torneo</span>
+              </div>
+              <div class="control">
+                <select id="evento"></select>
+                <span class="chev" aria-hidden="true"></span>
+              </div>
+            </div>
+
+            <div class="actions">
+              <button class="btn btnPrimary" id="btn">Calcular puntos</button>
+              <button class="btn btnGhost" id="btnReset" type="button">Limpiar</button>
+              <button class="btn btnGhost" id="btnCopy" type="button" style="display:none;">Copiar resultado</button>
+            </div>
+
+            <div id="msg" class="msg error" role="alert"></div>
+
+            <div id="res" class="result" aria-live="polite">
+              <div class="resultTitle">Resultado</div>
+              <div class="points" id="resVal">0,00</div>
+              <div class="pillRow" id="pillRow"></div>
+              <div class="meta" id="resMeta"></div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <aside class="side">
+        <div class="inner">
+          <h3 class="sideTitle">Fórmula aplicada</h3>
+
+          <div class="code">Puntos =
+10 × √(Entradas / Posición)
+× ( 1 + log₁₀( Tipo de evento + 0,25 ) )
+× √( Tipo de evento / 100.000 )</div>
+
+          <div class="list">
+            • <b>Entradas</b>: cantidad total de entradas del torneo<br>
+            • <b>Posición</b>: puesto final del jugador<br>
+            • <b>Tipo de evento</b>: valor destinado para el conteo de puntos (equivalente a Buy In + monto RNK sin rake y sin KO)
+          </div>
+
+          <div class="note">
+            Nota: el puntaje se asigna únicamente hasta el <b>TOP 40</b>.
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <!-- Footer con “legales” / estilo CAP -->
+    <div class="footer">
+      <div class="footerCard">
+        <div class="footerLeft">
+          <img src="https://v0-puntos-cap-2025.vercel.app/images/cap-logo.png" alt="CAP" />
+          <div class="footerText">
+            <div><b style="color:rgba(255,255,255,0.85)">Seguinos</b></div>
+            <div style="margin-top:4px">© Todos los derechos reservados</div>
+          </div>
+        </div>
+
+        <div class="footerRight">
+          <img class="legalesImg" src="https://capoker.com.ar/wp-content/uploads/2025/07/LEGALES-PIE%402x.png" alt="Legales" />
+          <div class="smallPrint">
+            SÓLO MAYORES DE 18 AÑOS. · JUGAR COMPULSIVAMENTE ES PERJUDICIAL PARA LA SALUD.<br>
+            Consultar bases y condiciones en: citycenteronline.bet.ar | casinomagiconline.bet.ar | casinoclubonline.bet.ar | casinobuenosairesonline.bet.ar
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    const EVENTOS = [
+      { key: "FINAL_HAND", label: "FINAL HAND", monto: 225000 },
+      { key: "CHAMPIONS",  label: "CHAMPIONS",  monto: 105000 },
+      { key: "LEGACY",     label: "LEGACY",     monto: 60000  },
+      { key: "GOLDEN",     label: "GOLDEN",     monto: 45000  },
+      { key: "VICTORY",    label: "VICTORY",    monto: 22000  },
+      { key: "STAGE",      label: "STAGE",      monto: 11000  },
+    ];
+
+    const qEntEl = document.getElementById("qEnt");
+    const posSel = document.getElementById("pos");
+    const eventoSel = document.getElementById("evento");
+    const btn = document.getElementById("btn");
+    const btnReset = document.getElementById("btnReset");
+    const btnCopy = document.getElementById("btnCopy");
+    const msg = document.getElementById("msg");
+    const res = document.getElementById("res");
+    const resVal = document.getElementById("resVal");
+    const resMeta = document.getElementById("resMeta");
+    const pillRow = document.getElementById("pillRow");
+
+    (function init(){
+      posSel.innerHTML = "";
+      for (let i = 1; i <= 40; i++) {
+        const opt = document.createElement("option");
+        opt.value = i;
+        opt.textContent = i;
+        posSel.appendChild(opt);
+      }
+      posSel.value = "1";
+
+      eventoSel.innerHTML = "";
+      EVENTOS.forEach(ev => {
+        const opt = document.createElement("option");
+        opt.value = ev.key;
+        opt.textContent = ev.label;
+        eventoSel.appendChild(opt);
+      });
+      eventoSel.value = EVENTOS[0].key;
+    })();
+
+    function log10(x){
+      return Math.log10 ? Math.log10(x) : (Math.log(x) / Math.log(10));
+    }
+
+    function formatAR(n){
+      return new Intl.NumberFormat("es-AR", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      }).format(n);
+    }
+
+    function showError(text){
+      msg.style.display = "block";
+      msg.textContent = text;
+      res.style.display = "none";
+      btnCopy.style.display = "none";
+    }
+
+    function clearError(){
+      msg.style.display = "none";
+      msg.textContent = "";
+    }
+
+    qEntEl.addEventListener("input", () => {
+      qEntEl.value = String(qEntEl.value).replace(/[^\d]/g, "");
+    });
+
+    function showResult(points, meta, pills){
+      resVal.textContent = formatAR(points) + " puntos";
+      resMeta.textContent = meta;
+
+      pillRow.innerHTML = "";
+      (pills || []).forEach(t => {
+        const s = document.createElement("span");
+        s.className = "pill";
+        s.textContent = t;
+        pillRow.appendChild(s);
+      });
+
+      res.style.display = "block";
+      btnCopy.style.display = "inline-block";
+    }
+
+    function calcular(){
+      clearError();
+
+      const entradas = Number(qEntEl.value);
+      const posicion = Number(posSel.value);
+
+      if (!Number.isFinite(entradas) || entradas <= 0) {
+        return showError("Ingresá una cantidad válida de entradas (entero mayor a 0).");
+      }
+
+      if (posicion > 40) {
+        return showResult(0, "Solo se otorgan puntos hasta el TOP 40.", ["TOP 40"]);
+      }
+
+      const evento = EVENTOS.find(e => e.key === eventoSel.value);
+      if (!evento) return showError("Tipo de evento inválido.");
+
+      const T = evento.monto;
+
+      const puntos =
+        10 *
+        Math.sqrt(entradas / posicion) *
+        (1 + log10(T + 0.25)) *
+        Math.sqrt(T / 100000);
+
+      const safe = Math.max(0, puntos);
+      showResult(
+        safe,
+        `Evento: ${evento.label} • Posición: ${posicion} • Entradas: ${entradas}`,
+        [`TOP ${posicion}`, evento.label]
+      );
+    }
+
+    btn.addEventListener("click", calcular);
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        if (document.activeElement && document.activeElement.tagName === "SELECT") return;
+        calcular();
+      }
+    });
+
+    btnReset.addEventListener("click", () => {
+      clearError();
+      qEntEl.value = "";
+      posSel.value = "1";
+      eventoSel.value = EVENTOS[0].key;
+      res.style.display = "none";
+      btnCopy.style.display = "none";
+      pillRow.innerHTML = "";
+      qEntEl.focus();
+    });
+
+    btnCopy.addEventListener("click", async () => {
+      const text = resVal.textContent;
+      try{
+        await navigator.clipboard.writeText(text);
+      }catch{
+        const tmp = document.createElement("textarea");
+        tmp.value = text;
+        document.body.appendChild(tmp);
+        tmp.select();
+        document.execCommand("copy");
+        document.body.removeChild(tmp);
+      }
+      btnCopy.textContent = "Copiado ✅";
+      setTimeout(() => (btnCopy.textContent = "Copiar resultado"), 1200);
+    });
+  </script>
+</body>
+</html>
